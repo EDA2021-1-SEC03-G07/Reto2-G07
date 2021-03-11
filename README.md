@@ -16,3 +16,14 @@ Este directorio contiene todo el código de base que se entrega para el funciona
 -Test
 Este directorio contiene las pruebas realizadas a los TADs, Estructuras de Datos y Algoritmos.
 
+Nombres integrantes:
+
+1. Req. 3 - Nicole Murillo Fonseca 202025521
+
+2. Req. 2 - Mariana Diaz Arenas 202020993
+
+Correos uniandes:
+
+1. n.murillof@uniandes.edu.co
+
+2. m.diaza2@uniandes.edu.co
