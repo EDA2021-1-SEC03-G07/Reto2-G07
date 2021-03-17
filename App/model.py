@@ -51,16 +51,19 @@ los mismos.
 
 def newCatalog():
 
-    catalog = {"videos" : None, "categories" : None}
+    catalog = {'videos' : None, 'countries' : None, 'categories_id' : None}
+
     catalog["videos"] = lt.newList("ARRAY_LIST", cmpfunction=comparevideos)
-    catalog["categories"] = lt.newList("ARRAY_LIST", cmpfunction=comparecategories)
+
+    catalog['countries'] = lt.newList(("ARRAY_LIST", cmpfunction= )
+    
+    catalog["categories_id"] = mp.newMap(32, maptype = 'CHAINING', loadfactor= 4.0, cmpfunction=comparecategories)
 
     return catalog 
 
 
 
 # Funciones para agregar informacion al catalogo
-
 
 
 def addVideo(catalog, videoname):
@@ -70,12 +73,12 @@ def addVideo(catalog, videoname):
 def addCategory(catalog, category):
 
     c = newCategory(category["name"], category["id"])
-    lt.addLast(catalog["categories"], c)
+    mp.put(catalog["categories_id"], category["name"], c)
+
 
 
 
 # Funciones para creacion de datos
-    
 
 
 def newCategory(name, id):
@@ -84,8 +87,7 @@ def newCategory(name, id):
     category["category_name"] = name
     category["category_id"] = id
     return category
-
-
+    
 
 # Funciones de consulta
 
@@ -106,44 +108,6 @@ def firstVideo (catalog):
     video = {"title": title, "channel_title": channel, "trending_date": trending_date, "country": country, "views": views, "likes": likes, "dislikes": dislikes}
 
     return video
-
-
-
-# Funciones utilizadas para comparar elementos dentro de una lista
-
-
-
-def comparevideos(videotitle1, video):
-
-    if (videotitle1.lower() in video["title"].lower()):
-        return -1
-    else:
-        return 0
-
-def comparecategories(name, category):
-
-    if (name==category["category_name"]):
-        return 0
-    elif (name<category["category_name"]):
-        return -1
-    else:
-        return 1
-
-def compVideoByViews(video1, video2):
-
-    return (float(video1['views']) > float(video2['views']))
-
-def compVideoByTitle (video1, video2):
-
-    return (str(video1['title']) < str(video2['title']))
-
-def compVideoByLikes(video1, video2):
-
-    return (float(video1['likes']) > float(video2['likes']))
-
-
-
-# Funciones de ordenamiento
 
 
 
@@ -178,7 +142,9 @@ def sortVideosByViews (catalog, category, country):
     sorted_list = merge.sort(sublistcountries, compVideoByViews)
     stop_time = time.process_time()
     elapsed_time_mseg = (stop_time - start_time)*1000
+    
     return elapsed_time_mseg, sorted_list
+
 
 
 def sortVideosCountryTrending (catalog, country):
@@ -295,6 +261,7 @@ def sortVideosCategoryTrending (catalog, category):
     return elapsed_time_mseg, result
 
 
+
 def sortVideosLikesTag(catalog, tag, country):
 
     start_time = time.process_time()
@@ -323,6 +290,47 @@ def sortVideosLikesTag(catalog, tag, country):
     elapsed_time_mseg = (stop_time - start_time)*1000
 
     return elapsed_time_mseg, sorted_list_likes
+
+
+
+# Funciones utilizadas para comparar elementos dentro de una lista
+
+
+
+def comparevideos(videotitle1, video):
+
+    if (videotitle1.lower() in video["title"].lower()):
+        return -1
+    else:
+        return 0
+
+
+def comparecategories(name, category):
+
+    if (name==category["category_name"]):
+        return 0
+    elif (name<category["category_name"]):
+        return -1
+    else:
+        return 1
+
+
+def compVideoByViews(video1, video2):
+
+    return (float(video1['views']) > float(video2['views']))
+
+
+def compVideoByTitle (video1, video2):
+
+    return (str(video1['title']) < str(video2['title']))
+    
+
+def compVideoByLikes(video1, video2):
+
+    return (float(video1['likes']) > float(video2['likes']))
+
+
+# Funciones de ordenamiento
 
 
 
