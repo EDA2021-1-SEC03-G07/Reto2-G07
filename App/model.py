@@ -51,13 +51,14 @@ los mismos.
 
 def newCatalog():
 
-    catalog = {'videos' : None, 'countries' : None, 'categories_id' : None}
+    catalog = {'videos' : None,  
+              'categories' : None}
 
     catalog["videos"] = lt.newList("ARRAY_LIST", cmpfunction=comparevideos)
-
-    catalog['countries'] = lt.newList(("ARRAY_LIST", cmpfunction= )
     
-    catalog["categories_id"] = mp.newMap(32, maptype = 'CHAINING', loadfactor= 4.0, cmpfunction=comparecategories)
+    catalog["categories"] = mp.newMap(32, maptype = 'PROBING', loadfactor= 0.5, comparefunction=comparecategories)
+
+    catalog["categories_sorted"] = = mp.newMap(32, maptype = 'PROBING', loadfactor= 0.5, comparefunction=comparecategories)
 
     return catalog 
 
@@ -69,14 +70,26 @@ def newCatalog():
 def addVideo(catalog, videoname):
 
     lt.addLast(catalog["videos"], videoname)
+
     
 def addCategory(catalog, category):
 
     c = newCategory(category["name"], category["id"])
-    mp.put(catalog["categories_id"], category["name"], c)
+    mp.put(catalog["categories"], category["name"], c)
 
 
+def addCategorySorted (catalog, video, category):
 
+    if not mp.contains(catalog["categories_sorted"], category):
+
+        mp.put(catalog["categories_sorted"], category, lt.newList("ARRAY_LIST"))
+    
+    list_exists = mp.getValue(catalog["categories_sorted"], category)
+
+    lt.addLast(list_exists, video)
+
+    mp.put(catalog["categories_sorted"], category, list_exists)
+    
 
 # Funciones para creacion de datos
 
@@ -87,10 +100,10 @@ def newCategory(name, id):
     category["category_name"] = name
     category["category_id"] = id
     return category
+
     
 
 # Funciones de consulta
-
 
 
 def firstVideo (catalog):
@@ -124,6 +137,10 @@ def sortVideosByViews (catalog, category, country):
 
         if (category_name.lower()) == (category.lower()):
             category_id = element["category_id"]
+
+
+    #mp.get(catalog["categories"], category)
+
 
     iterator2 = it.newIterator(catalog["videos"])
     while it.hasNext(iterator2):
@@ -307,9 +324,11 @@ def comparevideos(videotitle1, video):
 
 def comparecategories(name, category):
 
-    if (name==category["category_name"]):
+    categoryKey = me.getKey(category)
+
+    if (name==categoryKey):
         return 0
-    elif (name<category["category_name"]):
+    elif (name<categoryKey):
         return -1
     else:
         return 1
