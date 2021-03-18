@@ -58,7 +58,7 @@ def newCatalog():
     
     catalog["categories"] = mp.newMap(32, maptype = 'PROBING', loadfactor= 0.5, comparefunction=comparecategories)
 
-    catalog["categories_sorted"] = = mp.newMap(32, maptype = 'PROBING', loadfactor= 0.5, comparefunction=comparecategories)
+    catalog["categories_sorted"] = mp.newMap(32, maptype = 'PROBING', loadfactor= 0.5, comparefunction=comparecategories)
 
     return catalog 
 
@@ -74,21 +74,24 @@ def addVideo(catalog, videoname):
     
 def addCategory(catalog, category):
 
-    c = newCategory(category["name"], category["id"])
-    mp.put(catalog["categories"], category["name"], c)
+    c = newCategory(category["name"].lstrip(" "), category["id"])
+    mp.put(catalog["categories"], category["id"], c)
 
 
-def addCategorySorted (catalog, video, category):
+def addCategorySorted (catalog, videoname):
 
-    if not mp.contains(catalog["categories_sorted"], category):
+    category_id = videoname["category_id"]
+    category = (mp.get(catalog["categories"], category_id))["value"]["category_name"]
 
+    if mp.contains(catalog["categories_sorted"], category):
+
+        list_exists = mp.get(catalog["categories_sorted"], category)["value"]
+        lt.addLast(list_exists, videoname)
+        mp.put(catalog["categories_sorted"], category, list_exists)
+    else:
         mp.put(catalog["categories_sorted"], category, lt.newList("ARRAY_LIST"))
-    
-    list_exists = mp.getValue(catalog["categories_sorted"], category)
-
-    lt.addLast(list_exists, video)
-
-    mp.put(catalog["categories_sorted"], category, list_exists)
+        new_list = mp.get(catalog["categories_sorted"], category)["value"]
+        lt.addLast(new_list, videoname)
     
 
 # Funciones para creacion de datos
@@ -128,25 +131,7 @@ def sortVideosByViews (catalog, category, country):
 
     start_time = time.process_time()
 
-    sublistcategories = lt.newList("ARRAY_LIST")
-
-    iterator1 = it.newIterator(catalog["categories"])
-    while it.hasNext(iterator1):
-        element = it.next(iterator1)
-        category_name = (element["category_name"]).lstrip()
-
-        if (category_name.lower()) == (category.lower()):
-            category_id = element["category_id"]
-
-
-    #mp.get(catalog["categories"], category)
-
-
-    iterator2 = it.newIterator(catalog["videos"])
-    while it.hasNext(iterator2):
-        element = it.next(iterator2)
-        if element["category_id"] == category_id:
-            lt.addLast(sublistcategories, element)
+    sublistcategories = mp.get(catalog["categories_sorted"], category)["value"]
 
     sublistcountries = lt.newList("ARRAY_LIST")
 
