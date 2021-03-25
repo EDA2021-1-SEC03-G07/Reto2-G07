@@ -47,9 +47,9 @@ def printMenu():
 
 catalog = None
 
-def initCatalog():
+def initCatalog(map_type,load_factor):
 
-    return controller.initCatalog()
+    return controller.initCatalog(map_type,load_factor)
 
 def loadData(catalog):
 
@@ -83,14 +83,17 @@ while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n')
     if int(inputs[0]) == 1:
+        map_type = str(input("Ingrese el tipo de mapa que quiere implementar: "))
+        load_factor = float(input("Ingrese el factor de carga deseado: "))
         print("Cargando información de los archivos ....")
-        start_time = time.process_time()
-        catalog = initCatalog()
-        loadData(catalog)
+  
+        catalog = initCatalog(map_type,load_factor)
+        answer = controller.loadData(catalog)
         primer_video = controller.firstVideo(catalog)
-        stop_time = time.process_time()
-        elapsed_time_mseg = (stop_time - start_time)*1000
-        print("Tiempo: " + str(elapsed_time_mseg))
+    
+        print("Tiempo [ms]: ", f"{answer[0]:.3f}", "  ||  ",
+              "Memoria [kB]: ", f"{answer[1]:.3f}")
+
         print('Videos cargados: ' + str(lt.size(catalog["videos"])))
         print('El primer video es: ')
         print(primer_video)
