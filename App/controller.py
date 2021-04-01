@@ -40,11 +40,11 @@ def initCatalog(map_type,load_factor):
 
 def loadData(catalog):
     
+    tracemalloc.start()
     
     delta_time = -1.0
     delta_memory = -1.0
 
-    tracemalloc.start()
     start_time = getTime()
     start_memory = getMemory()
 
@@ -105,6 +105,12 @@ def sortVideosCategoryTrending (catalog, category):
 
     return model.sortVideosCategoryTrending (catalog, category)
 
+
+# ======================================
+# Funciones para medir tiempo y memoria
+# ======================================
+
+
 def getTime():
     """
     devuelve el instante tiempo de procesamiento en milisegundos
@@ -130,6 +136,7 @@ def deltaMemory(start_memory, stop_memory):
     # suma de las diferencias en uso de memoria
     for stat in memory_diff:
         delta_memory = delta_memory + stat.size_diff
+
     # de Byte -> kByte
     delta_memory = delta_memory/1024.0
     return delta_memory

@@ -89,16 +89,16 @@ while True:
   
         catalog = initCatalog(map_type,load_factor)
         answer = controller.loadData(catalog)
-        primer_video = controller.firstVideo(catalog)
-    
-        print("Tiempo [ms]: ", f"{answer[0]:.3f}", "  ||  ",
-              "Memoria [kB]: ", f"{answer[1]:.3f}")
+        first_video = controller.firstVideo(catalog)
 
         print('Videos cargados: ' + str(lt.size(catalog["videos"])))
         print('El primer video es: ')
-        print(primer_video)
+        print(first_video)
         print('Categorias cargadas: ' + str(lt.size(catalog["categories"])))
         print(catalog["categories"])
+
+        print("Tiempo [ms]: ", f"{answer[0]:.3f}", "  ||  ",
+              "Memoria [kB]: ", f"{answer[1]:.3f}")
 
     elif int(inputs[0]) == 2:
         sample = int(input("Indique el número n de elementos en la lista: "))
