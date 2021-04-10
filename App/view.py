@@ -105,33 +105,37 @@ while True:
         category = str(input("Indique la categoría de los videos: "))
         country = str(input("Indique el país de los videos: "))
         result = controller.sortVideosByViews(catalog, category, country)
-        print("Tiempo: " + str(result[0]))
         print("Los " + str(sample) + " videos con más views en la categoría " + category + " de " +
         country + "son: ") 
-        printResults(result[1], sample)
+        printResults(result[2], sample)
+        print("Tiempo [ms]: ", f"{result[0]:.3f}", "  ||  ",
+              "Memoria [kB]: ", f"{result[1]:.3f}")
 
     elif int(inputs[0]) == 3:
         country = str(input("Indique el país de los videos: "))
         result = controller.sortVideosCountryTrending (catalog, country)
-        print("Tiempo: " + str(result[0]))
         print("El video más trending en " + country + " es: ")
-        print(result[1])
+        print(result[2])
+        print("Tiempo [ms]: ", f"{result[0]:.3f}", "  ||  ",
+              "Memoria [kB]: ", f"{result[1]:.3f}")
     
     elif int(inputs[0]) == 4:
         category = str(input("Indique la categoría de los videos: "))
         result = controller.sortVideosCategoryTrending (catalog, category)
-        print("Tiempo: " + str(result[0]))
         print("El video más trending para la categoría " + category + " es: ")
-        print(result[1])
+        print(result[2])
+        print("Tiempo [ms]: ", f"{result[0]:.3f}", "  ||  ",
+              "Memoria [kB]: ", f"{result[1]:.3f}")
 
     elif int(inputs[0]) == 5:
         tag = str(input("Indique el tag de interes: "))
         country = str(input("Indique el país de los videos: "))
         sample = int(input("Indique el número n de elementos en la lista: "))
         result = controller.sortVideosLikesTag(catalog, tag, country)
-        print("Tiempo: " + str(result[0]))
         print("Los " + str(sample) + " videos con más likes y con el tag " + tag + " son: ")
-        printResults2(result[1], sample)
+        printResults2(result[2], sample)
+        print("Tiempo [ms]: ", f"{result[0]:.3f}", "  ||  ",
+              "Memoria [kB]: ", f"{result[1]:.3f}")
 
     else:
         sys.exit(0)

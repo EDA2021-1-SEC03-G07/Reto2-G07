@@ -37,6 +37,7 @@ from DISClib.DataStructures import listiterator as it
 assert cf
 from DISClib.ADT import map as mp
 from DISClib.DataStructures import mapentry as me
+import tracemalloc
 
 """
 Se define la estructura de un catálogo de videos. El catálogo tendrá dos listas, una para los videos, otra para las categorias de
@@ -150,7 +151,13 @@ def firstVideo (catalog):
 
 def sortVideosByViews (catalog, category, country):
 
-    start_time = time.process_time()
+    tracemalloc.start()
+    
+    delta_time = -1.0
+    delta_memory = -1.0
+
+    start_time = getTime()
+    start_memory = getMemory()
 
     sublistcategories = mp.get(catalog["categories_sorted"], category)["value"]
 
@@ -163,16 +170,26 @@ def sortVideosByViews (catalog, category, country):
             lt.addLast(sublistcountries, element)
 
     sorted_list = merge.sort(sublistcountries, compVideoByViews)
-    stop_time = time.process_time()
-    elapsed_time_mseg = (stop_time - start_time)*1000
+    stop_memory = getMemory()
+    stop_time = getTime()
+    tracemalloc.stop()
+
+    delta_time = stop_time - start_time
+    delta_memory = deltaMemory(start_memory, stop_memory)
     
-    return elapsed_time_mseg, sorted_list
+    return delta_time,delta_memory, sorted_list
 
 
 
 def sortVideosCountryTrending (catalog, country):
 
-    start_time = time.process_time()
+    tracemalloc.start()
+    
+    delta_time = -1.0
+    delta_memory = -1.0
+
+    start_time = getTime()
+    start_memory = getMemory()
 
     sublistcountries = mp.get(catalog["countries_sorted"], country)["value"]
 
@@ -211,16 +228,26 @@ def sortVideosCountryTrending (catalog, country):
     ", País: " + str(country) + ", Días: " + str(days_max) )
 
 
-    stop_time = time.process_time()
-    elapsed_time_mseg = (stop_time - start_time)*1000
+    stop_memory = getMemory()
+    stop_time = getTime()
+    tracemalloc.stop()
 
-    return elapsed_time_mseg, result
+    delta_time = stop_time - start_time
+    delta_memory = deltaMemory(start_memory, stop_memory)
+
+    return delta_time,delta_memory, result
     
 
 
 def sortVideosCategoryTrending (catalog, category):
 
-    start_time = time.process_time()
+    tracemalloc.start()
+    
+    delta_time = -1.0
+    delta_memory = -1.0
+
+    start_time = getTime()
+    start_memory = getMemory()
 
     sublistcategories = mp.get(catalog["categories_sorted"], category)["value"]
 
@@ -259,16 +286,26 @@ def sortVideosCategoryTrending (catalog, category):
     result = ("Titulo: " + str(title_max) + ", Nombre del canal: " + str(channel_max) + 
     ", Id de la categoria: " + str(category_id) + ", Días: " + str(days_max) )
 
-    stop_time = time.process_time()
-    elapsed_time_mseg = (stop_time - start_time)*1000
+    stop_memory = getMemory()
+    stop_time = getTime()
+    tracemalloc.stop()
 
-    return elapsed_time_mseg, result
+    delta_time = stop_time - start_time
+    delta_memory = deltaMemory(start_memory, stop_memory)
+
+    return delta_time, delta_memory, result
 
 
 
 def sortVideosLikesTag(catalog, tag, country):
 
-    start_time = time.process_time()
+    tracemalloc.start()
+    
+    delta_time = -1.0
+    delta_memory = -1.0
+
+    start_time = getTime()
+    start_memory = getMemory()
 
     sublistcountries = mp.get(catalog["countries_sorted"], country)["value"]
 
@@ -283,10 +320,14 @@ def sortVideosLikesTag(catalog, tag, country):
 
     sorted_list_likes = merge.sort(sublist_tags, compVideoByLikes)
 
-    stop_time = time.process_time()
-    elapsed_time_mseg = (stop_time - start_time)*1000
+    stop_memory = getMemory()
+    stop_time = getTime()
+    tracemalloc.stop()
 
-    return elapsed_time_mseg, sorted_list_likes
+    delta_time = stop_time - start_time
+    delta_memory = deltaMemory(start_memory, stop_memory)
+
+    return delta_time, delta_memory, sorted_list_likes
 
 
 
@@ -343,11 +384,40 @@ def compVideoByLikes(video1, video2):
 
 # Funciones de ordenamiento
 
+# ======================================
+# Funciones para medir tiempo y memoria
+# ======================================
 
 
+def getTime():
+    """
+    devuelve el instante tiempo de procesamiento en milisegundos
+    """
+    return float(time.perf_counter()*1000)
 
 
-    
+def getMemory():
+    """
+    toma una muestra de la memoria alocada en instante de tiempo
+    """
+    return tracemalloc.take_snapshot()
+
+
+def deltaMemory(start_memory, stop_memory):
+    """
+    calcula la diferencia en memoria alocada del programa entre dos
+    instantes de tiempo y devuelve el resultado en bytes (ej.: 2100.0 B)
+    """
+    memory_diff = stop_memory.compare_to(start_memory, "filename")
+    delta_memory = 0.0
+
+    # suma de las diferencias en uso de memoria
+    for stat in memory_diff:
+        delta_memory = delta_memory + stat.size_diff
+
+    # de Byte -> kByte
+    delta_memory = delta_memory/1024.0
+    return delta_memory
 
    
 
