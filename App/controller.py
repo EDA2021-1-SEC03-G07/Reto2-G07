@@ -68,6 +68,7 @@ def loadVideos(catalog):
     for video in input_file:
         model.addVideo(catalog, video)
         model.addCategorySorted(catalog, video)
+        model.addCountriesSorted (catalog, video)
 
 def loadCategories(catalog):
 

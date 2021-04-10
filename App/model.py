@@ -60,11 +60,14 @@ def newCatalog(map_type, load_factor):
 
     catalog["categories_sorted"] = mp.newMap(32, maptype = map_type , loadfactor = load_factor, comparefunction=comparecategories)
 
+    catalog["countries_sorted"] = mp.newMap(10, maptype = map_type, loadfactor = load_factor, comparefunction=comparecountries)
+
     return catalog 
 
 
 
 # Funciones para agregar informacion al catalogo
+
 
 
 def addVideo(catalog, videoname):
@@ -88,11 +91,29 @@ def addCategorySorted (catalog, videoname):
         list_exists = mp.get(catalog["categories_sorted"], category)["value"]
         lt.addLast(list_exists, videoname)
         mp.put(catalog["categories_sorted"], category, list_exists)
+
     else:
         mp.put(catalog["categories_sorted"], category, lt.newList("ARRAY_LIST"))
         new_list = mp.get(catalog["categories_sorted"], category)["value"]
         lt.addLast(new_list, videoname)
-    
+
+
+def addCountriesSorted (catalog, videoname):
+
+    country = videoname["country"]
+
+    if mp.contains(catalog["countries_sorted"], country):
+
+        list_exists = mp.get(catalog["countries_sorted"], country)["value"]
+        lt.addLast(list_exists, videoname)
+        mp.put(catalog["countries_sorted"], country, list_exists)
+
+    else:
+        mp.put(catalog["countries_sorted"], country, lt.newList("ARRAY_LIST"))
+        new_list = mp.get(catalog["countries_sorted"], country)["value"]
+        lt.addLast(new_list, videoname)
+
+
 
 # Funciones para creacion de datos
 
@@ -153,13 +174,7 @@ def sortVideosCountryTrending (catalog, country):
 
     start_time = time.process_time()
 
-    sublistcountries = lt.newList("ARRAY_LIST")
-
-    iterator1 = it.newIterator(catalog["videos"])
-    while it.hasNext(iterator1):
-        element = it.next(iterator1)
-        if (element["country"].lower()) == (country.lower()):
-            lt.addLast(sublistcountries, element)
+    sublistcountries = mp.get(catalog["countries_sorted"], country)["value"]
 
     sorted_list_titles = merge.sort(sublistcountries, compVideoByTitle)
 
@@ -207,22 +222,7 @@ def sortVideosCategoryTrending (catalog, category):
 
     start_time = time.process_time()
 
-    sublistcategories = lt.newList("ARRAY_LIST")
-
-    iterator1 = it.newIterator(catalog["categories"])
-    while it.hasNext(iterator1):
-        element = it.next(iterator1)
-        category_name = (element["category_name"]).lstrip(" ")
-
-        if (category_name.lower()) == (category.lower()):
-            category_id = element["category_id"]
-
-
-    iterator2 = it.newIterator(catalog["videos"])
-    while it.hasNext(iterator2):
-        element = it.next(iterator2)
-        if element["category_id"] == category_id:
-            lt.addLast(sublistcategories, element)
+    sublistcategories = mp.get(catalog["categories_sorted"], category)["value"]
 
     sorted_list = merge.sort(sublistcategories,compVideoByTitle)
 
@@ -234,6 +234,7 @@ def sortVideosCategoryTrending (catalog, category):
     channel_max = ""
     title = ""
     title_max = ""
+    category_id = None
 
     iterator3 = it.newIterator(sorted_list)
     while it.hasNext(iterator3):
@@ -249,6 +250,7 @@ def sortVideosCategoryTrending (catalog, category):
                 video_id_max = video_id
                 channel_max = channel
                 title_max = title
+                category_id = element["category_id"]
             video_id = element["video_id"]
             channel = element["channel_title"]
             title = element["title"]
@@ -268,25 +270,18 @@ def sortVideosLikesTag(catalog, tag, country):
 
     start_time = time.process_time()
 
+    sublistcountries = mp.get(catalog["countries_sorted"], country)["value"]
+
     sublist_tags = lt.newList("ARRAY_LIST")
 
-
-    iterator1 = it.newIterator(catalog["videos"])
+    iterator1 = it.newIterator(sublistcountries)
     while it.hasNext(iterator1):
         element = it.next(iterator1)
         if str(tag.lower()) in str(element["tags"].lower()):
             lt.addLast(sublist_tags, element)
 
-    sublist_countries = lt.newList("ARRAY_LIST")
 
-    iterator2 = it.newIterator(sublist_tags)
-    while it.hasNext(iterator2):
-        element = it.next(iterator2)
-        if (element["country"].lower()) == (country.lower()):
-            lt.addLast(sublist_countries, element)
-
-
-    sorted_list_likes = merge.sort(sublist_countries, compVideoByLikes)
+    sorted_list_likes = merge.sort(sublist_tags, compVideoByLikes)
 
     stop_time = time.process_time()
     elapsed_time_mseg = (stop_time - start_time)*1000
@@ -314,6 +309,18 @@ def comparecategories(name, category):
     if (name==categoryKey):
         return 0
     elif (name<categoryKey):
+        return -1
+    else:
+        return 1
+
+
+def comparecountries (name, country):
+
+    countryKey = me.getKey(country)
+
+    if (name==countryKey):
+        return 0
+    elif (name<countryKey):
         return -1
     else:
         return 1

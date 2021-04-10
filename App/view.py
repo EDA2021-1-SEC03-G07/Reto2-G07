@@ -39,10 +39,10 @@ operación solicitada
 def printMenu():
     print("Bienvenido")
     print("1- Cargar información en el catálogo")
-    print("2- Videos n con más views en un país determinado")
+    print("2- Videos n con más views en un país determinado dada una categoría específica")
     print("3- Video trending por más días en un país determinado")
     print("4- Video trending por más días para una categoría específica")
-    print("5- Videos n con más likes y con un tag específico")
+    print("5- Videos n con más likes en un país determinado dado un tag específico")
     print("0- Salir")
 
 catalog = None
