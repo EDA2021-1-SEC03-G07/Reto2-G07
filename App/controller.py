@@ -69,6 +69,7 @@ def loadVideos(catalog):
         model.addVideo(catalog, video)
         model.addCategorySorted(catalog, video)
         model.addCountriesSorted (catalog, video)
+        model.addCountryCategorySorted (catalog, video)
 
 def loadCategories(catalog):
 

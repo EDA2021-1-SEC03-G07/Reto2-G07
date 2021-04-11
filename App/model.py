@@ -63,6 +63,8 @@ def newCatalog(map_type, load_factor):
 
     catalog["countries_sorted"] = mp.newMap(10, maptype = map_type, loadfactor = load_factor, comparefunction=comparecountries)
 
+    catalog["country_category_sorted"] = mp.newMap(320, maptype = map_type, loadfactor = load_factor, comparefunction=comparecountries)
+
     return catalog 
 
 
@@ -114,6 +116,23 @@ def addCountriesSorted (catalog, videoname):
         new_list = mp.get(catalog["countries_sorted"], country)["value"]
         lt.addLast(new_list, videoname)
 
+def addCountryCategorySorted (catalog, videoname):
+
+    category_id = videoname["category_id"]
+    category = (mp.get(catalog["categories"], category_id))["value"]["category_name"]
+
+    country = videoname["country"]
+
+    if mp.contains(catalog["country_category_sorted"], country + "/" + category):
+        list_exists = mp.get(catalog["country_category_sorted"], country + "/" + category)["value"]
+        lt.addLast(list_exists, videoname)
+        mp.put(catalog["country_category_sorted"], country + "/" + category, list_exists)
+
+    else:
+        mp.put(catalog["country_category_sorted"], country + "/" + category, lt.newList("ARRAY_LIST"))
+        new_list = mp.get(catalog["country_category_sorted"], country + "/" + category)["value"]
+        lt.addLast(new_list, videoname)
+
 
 
 # Funciones para creacion de datos
@@ -159,17 +178,9 @@ def sortVideosByViews (catalog, category, country):
     start_time = getTime()
     start_memory = getMemory()
 
-    sublistcategories = mp.get(catalog["categories_sorted"], category)["value"]
+    sorted_list_country_category = mp.get(catalog["country_category_sorted"], country + "/" + category)["value"]
 
-    sublistcountries = lt.newList("ARRAY_LIST")
-
-    iterator3 = it.newIterator(sublistcategories)
-    while it.hasNext(iterator3):
-        element = it.next(iterator3)
-        if (element["country"].lower()) == (country.lower()):
-            lt.addLast(sublistcountries, element)
-
-    sorted_list = merge.sort(sublistcountries, compVideoByViews)
+    sorted_list = merge.sort(sorted_list_country_category, compVideoByViews)
     stop_memory = getMemory()
     stop_time = getTime()
     tracemalloc.stop()
@@ -177,7 +188,7 @@ def sortVideosByViews (catalog, category, country):
     delta_time = stop_time - start_time
     delta_memory = deltaMemory(start_memory, stop_memory)
     
-    return delta_time,delta_memory, sorted_list
+    return delta_time, delta_memory, sorted_list
 
 
 
@@ -235,7 +246,7 @@ def sortVideosCountryTrending (catalog, country):
     delta_time = stop_time - start_time
     delta_memory = deltaMemory(start_memory, stop_memory)
 
-    return delta_time,delta_memory, result
+    return delta_time, delta_memory, result
     
 
 
