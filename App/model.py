@@ -50,20 +50,20 @@ los mismos.
 
 
 
-def newCatalog(map_type, load_factor):
+def newCatalog():
 
     catalog = {'videos' : None,  
               'categories' : None}
 
     catalog["videos"] = lt.newList("ARRAY_LIST", cmpfunction=comparevideos)
     
-    catalog["categories"] = mp.newMap(32, maptype = map_type, loadfactor = load_factor, comparefunction=comparecategories)
+    catalog["categories"] = mp.newMap(32, maptype = "PROBING", loadfactor = 0.5, comparefunction=comparecategories)
 
-    catalog["categories_sorted"] = mp.newMap(32, maptype = map_type , loadfactor = load_factor, comparefunction=comparecategories)
+    catalog["categories_sorted"] = mp.newMap(32, maptype = "PROBING", loadfactor = 0.5, comparefunction=comparecategories)
 
-    catalog["countries_sorted"] = mp.newMap(10, maptype = map_type, loadfactor = load_factor, comparefunction=comparecountries)
+    catalog["countries_sorted"] = mp.newMap(10, maptype = "PROBING", loadfactor = 0.5, comparefunction=comparecountries)
 
-    catalog["country_category_sorted"] = mp.newMap(320, maptype = map_type, loadfactor = load_factor, comparefunction=comparecountries)
+    catalog["country_category_sorted"] = mp.newMap(320, maptype = "PROBING", loadfactor = 0.5, comparefunction=comparecountries)
 
     return catalog 
 

@@ -51,9 +51,9 @@ def printMenu():
 
 catalog = None
 
-def initCatalog(map_type,load_factor):
+def initCatalog():
 
-    return controller.initCatalog(map_type,load_factor)
+    return controller.initCatalog()
 
 def loadData(catalog):
 
@@ -88,13 +88,10 @@ while True:
     inputs = input('Seleccione una opción para continuar\n')
     if int(inputs[0]) == 1:
         print("\n")
-        map_type = str(input("Ingrese el tipo de mapa que quiere implementar: "))
-        load_factor = float(input("Ingrese el factor de carga deseado: "))
-        print("\n")
         print("Cargando información de los archivos ....")
         print("\n")
   
-        catalog = initCatalog(map_type,load_factor)
+        catalog = initCatalog()
         answer = controller.loadData(catalog)
         first_video = controller.firstVideo(catalog)
 
@@ -110,7 +107,6 @@ while True:
         print("\n")
         print("Tiempo [ms]: ", f"{answer[0]:.3f}", "  ||  ",
               "Memoria [kB]: ", f"{answer[1]:.3f}")
-        print("\n")
 
     elif int(inputs[0]) == 2:
         print("\n")
@@ -120,13 +116,12 @@ while True:
         print("\n")
         result = controller.sortVideosByViews(catalog, category, country)
         print("Los " + str(sample) + " videos con más views en la categoría " + category + " de " +
-        country + "son: ") 
+        country + " son: ") 
         print("\n")
         printResults(result[2], sample)
         print("\n")
         print("Tiempo [ms]: ", f"{result[0]:.3f}", "  ||  ",
               "Memoria [kB]: ", f"{result[1]:.3f}")
-        print("\n")
 
     elif int(inputs[0]) == 3:
         print("\n")
@@ -139,7 +134,6 @@ while True:
         print("\n")
         print("Tiempo [ms]: ", f"{result[0]:.3f}", "  ||  ",
               "Memoria [kB]: ", f"{result[1]:.3f}")
-        print("\n")
     
     elif int(inputs[0]) == 4:
         print("\n")
@@ -152,7 +146,6 @@ while True:
         print("\n")
         print("Tiempo [ms]: ", f"{result[0]:.3f}", "  ||  ",
               "Memoria [kB]: ", f"{result[1]:.3f}")
-        print("\n")
 
     elif int(inputs[0]) == 5:
         print("\n")
@@ -167,7 +160,6 @@ while True:
         print("\n")
         print("Tiempo [ms]: ", f"{result[0]:.3f}", "  ||  ",
               "Memoria [kB]: ", f"{result[1]:.3f}")
-        print("\n")
 
     else:
         sys.exit(0)
