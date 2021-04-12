@@ -37,6 +37,8 @@ operación solicitada
 """
 
 def printMenu():
+    print("\n")
+    print("*******************************************")
     print("Bienvenido")
     print("1- Cargar información en el catálogo")
     print("2- Videos n con más views en un país determinado dada una categoría específica")
@@ -44,6 +46,8 @@ def printMenu():
     print("4- Video trending por más días para una categoría específica")
     print("5- Videos n con más likes en un país determinado dado un tag específico")
     print("0- Salir")
+    print("*******************************************")
+    print ("\n")
 
 catalog = None
 
@@ -83,59 +87,87 @@ while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n')
     if int(inputs[0]) == 1:
+        print("\n")
         map_type = str(input("Ingrese el tipo de mapa que quiere implementar: "))
         load_factor = float(input("Ingrese el factor de carga deseado: "))
+        print("\n")
         print("Cargando información de los archivos ....")
+        print("\n")
   
         catalog = initCatalog(map_type,load_factor)
         answer = controller.loadData(catalog)
         first_video = controller.firstVideo(catalog)
 
         print('Videos cargados: ' + str(lt.size(catalog["videos"])))
+        print("\n")
         print('El primer video es: ')
+        print("\n")
         print(first_video)
+        print("\n")
         print('Categorias cargadas: ' + str(lt.size(catalog["categories"])))
+        print("\n")
         print(catalog["categories"])
-
+        print("\n")
         print("Tiempo [ms]: ", f"{answer[0]:.3f}", "  ||  ",
               "Memoria [kB]: ", f"{answer[1]:.3f}")
+        print("\n")
 
     elif int(inputs[0]) == 2:
+        print("\n")
         sample = int(input("Indique el número n de elementos en la lista: "))
         category = str(input("Indique la categoría de los videos: "))
         country = str(input("Indique el país de los videos: "))
+        print("\n")
         result = controller.sortVideosByViews(catalog, category, country)
         print("Los " + str(sample) + " videos con más views en la categoría " + category + " de " +
         country + "son: ") 
+        print("\n")
         printResults(result[2], sample)
+        print("\n")
         print("Tiempo [ms]: ", f"{result[0]:.3f}", "  ||  ",
               "Memoria [kB]: ", f"{result[1]:.3f}")
+        print("\n")
 
     elif int(inputs[0]) == 3:
+        print("\n")
         country = str(input("Indique el país de los videos: "))
         result = controller.sortVideosCountryTrending (catalog, country)
+        print("\n")
         print("El video más trending en " + country + " es: ")
+        print("\n")
         print(result[2])
+        print("\n")
         print("Tiempo [ms]: ", f"{result[0]:.3f}", "  ||  ",
               "Memoria [kB]: ", f"{result[1]:.3f}")
+        print("\n")
     
     elif int(inputs[0]) == 4:
+        print("\n")
         category = str(input("Indique la categoría de los videos: "))
         result = controller.sortVideosCategoryTrending (catalog, category)
+        print("\n")
         print("El video más trending para la categoría " + category + " es: ")
+        print("\n")
         print(result[2])
+        print("\n")
         print("Tiempo [ms]: ", f"{result[0]:.3f}", "  ||  ",
               "Memoria [kB]: ", f"{result[1]:.3f}")
+        print("\n")
 
     elif int(inputs[0]) == 5:
+        print("\n")
         tag = str(input("Indique el tag de interes: "))
         country = str(input("Indique el país de los videos: "))
         sample = int(input("Indique el número n de elementos en la lista: "))
+        print("\n")
         result = controller.sortVideosLikesTag(catalog, tag, country)
         print("Los " + str(sample) + " videos con más likes y con el tag " + tag + " son: ")
+        print("\n")
         printResults2(result[2], sample)
+        print("\n")
         print("Tiempo [ms]: ", f"{result[0]:.3f}", "  ||  ",
               "Memoria [kB]: ", f"{result[1]:.3f}")
+        print("\n")
 
     else:
         sys.exit(0)
