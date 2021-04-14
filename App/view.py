@@ -29,12 +29,6 @@ assert cf
 from DISClib.ADT import map as mp
 
 
-"""
-La vista se encarga de la interacción con el usuario
-Presenta el menu de opciones y por cada seleccion
-se hace la solicitud al controlador para ejecutar la
-operación solicitada
-"""
 
 def printMenu():
     print("\n")
@@ -49,15 +43,18 @@ def printMenu():
     print("*******************************************")
     print ("\n")
 
+
 catalog = None
 
 def initCatalog():
 
     return controller.initCatalog()
 
+
 def loadData(catalog):
 
     controller.loadData(catalog)
+
 
 def printResults(sortedVideos, sample):
     size = lt.size(sortedVideos)
@@ -70,6 +67,7 @@ def printResults(sortedVideos, sample):
             video['publish_time'] + ', Vistas: ' + video['views'] + ', Likes: ' + video['likes'] + ', Dislikes: ' + video['dislikes'])
             i +=1
 
+
 def printResults2(sortedVideos, sample):
     size = lt.size(sortedVideos)
     if size > sample:
@@ -80,9 +78,12 @@ def printResults2(sortedVideos, sample):
             ', Likes: ' + video['likes'] + ', Dislikes: ' + video['dislikes'] + ', Tags: ' + video['tags'] + ", País: " + video["country"])
             i +=1
 
+
 """
 Menu principal
 """
+
+
 while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n')
@@ -164,3 +165,5 @@ while True:
     else:
         sys.exit(0)
 sys.exit(0)
+
+

@@ -28,9 +28,6 @@
 import config as cf
 import time
 from DISClib.ADT import list as lt
-from DISClib.Algorithms.Sorting import shellsort as shell
-from DISClib.Algorithms.Sorting import selectionsort as selection
-from DISClib.Algorithms.Sorting import insertionsort as insertion
 from DISClib.Algorithms.Sorting import mergesort as merge
 from DISClib.Algorithms.Sorting import quicksort as quick
 from DISClib.DataStructures import listiterator as it
@@ -39,21 +36,22 @@ from DISClib.ADT import map as mp
 from DISClib.DataStructures import mapentry as me
 import tracemalloc
 
-"""
-Se define la estructura de un catálogo de videos. El catálogo tendrá dos listas, una para los videos, otra para las categorias de
-los mismos.
-"""
 
 
 
+# ========================
 # Construccion de modelos
+# ========================
 
 
 
 def newCatalog():
 
     catalog = {'videos' : None,  
-              'categories' : None}
+              'categories' : None,
+              'categories_sorted' : None,
+              'countries_sorted' : None,
+              'country_category_sorted' : None}
 
     catalog["videos"] = lt.newList("ARRAY_LIST", cmpfunction=comparevideos)
     
@@ -69,7 +67,9 @@ def newCatalog():
 
 
 
+# =============================================
 # Funciones para agregar informacion al catalogo
+# =============================================
 
 
 
@@ -116,6 +116,7 @@ def addCountriesSorted (catalog, videoname):
         new_list = mp.get(catalog["countries_sorted"], country)["value"]
         lt.addLast(new_list, videoname)
 
+
 def addCountryCategorySorted (catalog, videoname):
 
     category_id = videoname["category_id"]
@@ -135,7 +136,10 @@ def addCountryCategorySorted (catalog, videoname):
 
 
 
+# =================================
 # Funciones para creacion de datos
+# =================================
+
 
 
 def newCategory(name, id):
@@ -147,7 +151,10 @@ def newCategory(name, id):
 
     
 
+# ======================
 # Funciones de consulta
+# ======================
+
 
 
 def firstVideo (catalog):
@@ -165,7 +172,6 @@ def firstVideo (catalog):
     video = {"title": title, "channel_title": channel, "trending_date": trending_date, "country": country, "views": views, "likes": likes, "dislikes": dislikes}
 
     return video
-
 
 
 def sortVideosByViews (catalog, category, country):
@@ -189,7 +195,6 @@ def sortVideosByViews (catalog, category, country):
     delta_memory = deltaMemory(start_memory, stop_memory)
     
     return delta_time, delta_memory, sorted_list
-
 
 
 def sortVideosCountryTrending (catalog, country):
@@ -249,7 +254,6 @@ def sortVideosCountryTrending (catalog, country):
     return delta_time, delta_memory, result
     
 
-
 def sortVideosCategoryTrending (catalog, category):
 
     tracemalloc.start()
@@ -307,7 +311,6 @@ def sortVideosCategoryTrending (catalog, category):
     return delta_time, delta_memory, result
 
 
-
 def sortVideosLikesTag(catalog, tag, country):
 
     tracemalloc.start()
@@ -342,7 +345,9 @@ def sortVideosLikesTag(catalog, tag, country):
 
 
 
+# ================================================================
 # Funciones utilizadas para comparar elementos dentro de una lista
+# ================================================================
 
 
 
@@ -393,11 +398,11 @@ def compVideoByLikes(video1, video2):
     return (float(video1['likes']) > float(video2['likes']))
 
 
-# Funciones de ordenamiento
 
 # ======================================
 # Funciones para medir tiempo y memoria
 # ======================================
+
 
 
 def getTime():
@@ -431,13 +436,4 @@ def deltaMemory(start_memory, stop_memory):
     return delta_memory
 
    
-
-
-    
-
-    
-
-
-
-
 
