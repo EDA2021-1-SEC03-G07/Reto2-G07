@@ -25,18 +25,26 @@ import config as cf
 import model
 import csv
 
-"""
-El controlador se encarga de mediar entre la vista y el modelo.
-"""
 
+
+# ======================================
 # Inicialización del Catálogo de libros
+# ======================================
+
+
 
 def initCatalog():
 
     catalog = model.newCatalog()
     return catalog
 
+
+
+# ================================
 # Funciones para la carga de datos
+# ================================
+
+
 
 def loadData(catalog):
     
@@ -71,6 +79,7 @@ def loadVideos(catalog):
         model.addCountriesSorted (catalog, video)
         model.addCountryCategorySorted (catalog, video)
 
+
 def loadCategories(catalog):
 
     categoriesfile = cf.data_dir + 'videos/category-id.csv'
@@ -80,19 +89,30 @@ def loadCategories(catalog):
 
 
 
+# ==========================
 # Funciones de ordenamiento
+# ==========================
+
+
 
 def sortVideosByViews(catalog, category, country):
     
     return model.sortVideosByViews(catalog, category, country)
 
+
+
+# =======================================
 # Funciones de consulta sobre el catálogo
+# =======================================
+
+
 
 def firstVideo(catalog):
 
     firstvideo = model.firstVideo(catalog)
 
     return firstvideo
+
 
 def sortVideosCountryTrending (catalog,country):
 
@@ -103,14 +123,17 @@ def sortVideosLikesTag(catalog, tag, country):
 
     return model.sortVideosLikesTag(catalog, tag, country)
 
+
 def sortVideosCategoryTrending (catalog, category):
 
     return model.sortVideosCategoryTrending (catalog, category)
 
 
+
 # ======================================
 # Funciones para medir tiempo y memoria
 # ======================================
+
 
 
 def getTime():
@@ -142,3 +165,6 @@ def deltaMemory(start_memory, stop_memory):
     # de Byte -> kByte
     delta_memory = delta_memory/1024.0
     return delta_memory
+
+
+    
